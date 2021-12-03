@@ -7,6 +7,7 @@ import { TodoCounter } from "./TodoCounter";
 import { TodoList } from "./TodoList";
 import { TodoItem } from "./TodoItem";
 import { CreateTodoButton } from "./CreateTodobutton";
+import { TodoSearch } from "./TodoSearch";
 
 const todos = [
   { text: 'cortar cebolla', completed: false },
@@ -21,9 +22,9 @@ function App() {
     <React.Fragment>
 
       <TodoCounter />
-      {/* <TodoSearch /> */}
-      <input placeholder="Cebolla" />
 
+      <TodoSearch />
+      
       <TodoList>
       {/* El método map() crea un nuevo array con los resultados de la llamada a la función indicada aplicados a cada uno de sus elementos */}
         {todos.map(todo => (

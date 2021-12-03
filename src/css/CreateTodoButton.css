@@ -1,0 +1,27 @@
+.CreateTodoButton {
+    background-color: #61DAFA;
+    box-shadow: 0px 5px 25px rgba(97, 218, 250, 0.5);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 50px;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    font-weight: bold;
+    color: #FAFAFA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 64px;
+    width: 64px;
+    /* La propiedad transform se declara para rotar el objeto pero en 0 */
+    transform: rotate(0);
+    /* Transition va definir la velocidad y la manera como se hara la transicion del transform */
+    transition: .3s ease;
+  }
+  
+  .CreateTodoButton:hover {
+    /* Al pasar el mouse por encima del objeto, este rotara 224 grados desde el punto 0 como esta definido el primer transform */
+    transform: rotate(180deg);
+  }
