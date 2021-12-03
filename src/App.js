@@ -29,7 +29,11 @@ function App() {
       {/* El método map() crea un nuevo array con los resultados de la llamada a la función indicada aplicados a cada uno de sus elementos */}
         {todos.map(todo => (
           // React nos pide un identificador unico para cada elemento renderizado
-          <TodoItem key= {todo.text} text={todo.text}/>
+          <TodoItem 
+          key= {todo.text} 
+          text={todo.text}
+          completed={todo.completed}
+          />
         ))} 
       </TodoList>
 
