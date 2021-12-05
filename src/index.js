@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 // Importamos la funcion app del archivo ./app para poder usarlo en este archivo
 import App from './App';
+import './css/index.css';
 
 
 

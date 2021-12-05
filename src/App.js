@@ -8,6 +8,7 @@ import { TodoList } from "./TodoList";
 import { TodoItem } from "./TodoItem";
 import { CreateTodoButton } from "./CreateTodobutton";
 import { TodoSearch } from "./TodoSearch";
+import './css/App.css';
 
 const todos = [
   { text: 'cortar cebolla', completed: false },
