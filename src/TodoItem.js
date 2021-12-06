@@ -2,15 +2,7 @@ import React from "react";
 import './css/TodoItem.css';
 
 function TodoItem(props) {
-  
-  // Generamos una alerta que concatene el texto de la propiedades que se definen TodoList
-  const onComplete = () => {
-    alert('Ya completaste el todo ' + props.text);
-  };
-  
-  const onDelete = () => {
-    alert('Borraste el todo ' + props.text);
-  }
+
     return (
       <li className="TodoItem">
           {/* Le asignamos la clase icon, pero si la propiedad completed is true, cambia a icon-check--active */}
@@ -18,7 +10,9 @@ function TodoItem(props) {
          className={`Icon Icon-check ${props.completed && 'Icon-check--active'}`}
          // Recuerda si envias parametros para la funcion que llamaras en el atributo
          // Debes llamar la funcion dentro de arrow function para que no se ejecute
-         onClick={onComplete}
+         // Al dispararse el evento onclick, se ejecuta onComplete que viene de las props
+         // onComplete ejecuta la funcion flecha que cambia el atributo completed a en los todo's
+         onClick={props.onComplete}
          >
           √
         </span>
@@ -28,7 +22,8 @@ function TodoItem(props) {
         </p>
         <span
         className="Icon Icon-delete"
-        onClick={onDelete}
+        // onDelete ejecuta la funcion flecha que elimina el todo del array de todo's
+        onClick={props.onDelete}
         >
           X
         </span>
