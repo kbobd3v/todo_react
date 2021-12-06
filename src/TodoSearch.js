@@ -1,12 +1,8 @@
-import React,  { useState } from "react";
+import React from "react";
 import './css/TodoSearch.css';
 
-
-function TodoSearch() {
-    // El estado de uso nos permite cambiar el valor de una variable cuando se requiera
-    // En este caso searchValue es el nombre que escogimos para el valor inicial que será ''
-    // setSearchValue es el nuevo valor que se le dará a searchValue cuando lo necesitemos
-    const [searchValue, setSearchValue] = React.useState('');  
+// Se requieren los parametros de estado de uso de searchValue para ejecutar TodoSearch
+function TodoSearch({searchValue, setSearchValue}) {
     // Al agregar el atributo onchange a nuestro input, podemos traer informacion del evento
     // Y usarla en nuestra funcion, en este caso nos traemos el target con su value
     // Estas opciones aparecen al mandar el event a la consola, en google chrome puedes ver mas acerca de eventos al dispararlos
@@ -16,7 +12,7 @@ function TodoSearch() {
         setSearchValue(event.target.value);
     };
     
-    return [
+    return (
     <input 
         className="TodoSearch" 
         placeholder="Que debes hacer hoy?" 
@@ -24,10 +20,8 @@ function TodoSearch() {
         value={searchValue}
         // El evento onChange ejecuta nuestra funcion sin enviarle parametros
         onChange={onSearchValueChange}
-        />,
-        // Y lo renderizamos para visualizar su cambio
-        <p>{searchValue}</p>
-    ];        
+        />
+    );        
 }
 
 export { TodoSearch };

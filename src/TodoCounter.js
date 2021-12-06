@@ -1,9 +1,10 @@
 import React from "react";
 import './css/TodoCounter.css';
 
-function TodoCounter() {
+// Requerimos los parametros total y completed para usarlos en el contador
+function TodoCounter({total, completed}) {
     return (
-        <h2 className="TodoCounter"> Has completado 2 de 3 TODOs</h2>
+        <h2 className="TodoCounter"> Has completado {completed} de {total} TODOs</h2>
     )
 }
 
