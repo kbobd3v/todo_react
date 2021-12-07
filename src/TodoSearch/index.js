@@ -1,5 +1,5 @@
 import React from "react";
-import './css/TodoSearch.css';
+import '../css/TodoSearch.css';
 
 // Se requieren los parametros de estado de uso de searchValue para ejecutar TodoSearch
 function TodoSearch({searchValue, setSearchValue}) {

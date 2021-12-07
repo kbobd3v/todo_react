@@ -1,5 +1,5 @@
 import React from "react";
-import './css/TodoCounter.css';
+import '../css/TodoCounter.css';
 
 // Requerimos los parametros total y completed para usarlos en el contador
 function TodoCounter({total, completed}) {
