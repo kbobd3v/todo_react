@@ -11,37 +11,62 @@ import { AppUI } from "./AppUI";
 //   { text: 'Llorar a la lloreria', completed: false },
 // ]
 
-
-
-function App() {
+// Creamos nuestro primer hook para almacenar datos en localStorage
+// Tomamos el nombre del todo como parametro itemName y el valor inicial del item
+function useLocalStorage(itemName, initialValue) {
   // Con localStorage podemos crear persistencia de datos
   // Significa que estos datos estaran disponibles solo hasta que se eliminen del navegador
-  // Le decimos a localStorage que busque informacion del item TODOS_V1
-  const localStorageTodos = localStorage.getItem('TODOS_V1');
+  // Le decimos a localStorage que busque informacion del itemName TODOS_V1 
+  const localStorageItem = localStorage.getItem(itemName);
 
   // Creamos una variable vacia, localStorage solo almacena texto, entonces debes parsear
-  let parsedTodos;
+  let parsedItem;
 
-  // Entonces si localStorageTodos es false
-  // Es decir si localStorage no encontro el item TODOS_V1...
-  if (!localStorageTodos){
+  // Entonces si localStorageItem es false
+  // Es decir si localStorage no encontro el itemName TODOS_V1...
+  if (!localStorageItem) {
     // Va a llenarlo con el mismo key TODOS_V1
     // y le decimos que su valor será un arreglo vacio pero como localStorage solo guarda strings
     // Pasamos el arreglo vacio por stringyfy y listo.
-    localStorage.setItem('TODOS_V1', JSON.stringify([]));
-    parsedTodos = [];
+    localStorage.setItem(itemName, JSON.stringify(initialValue));
+    // Creamos una variable que almacene el valor por defecto
+    parsedItem = initialValue;
   } else {
     // De encontrar TODOS_V1 en getItem, entonces parseará sus valores a tipo JSON
-    // Y se lo asigna a la variable parsedTodos que ahora sera el valor por defecto de nuestro useState
-    parsedTodos = JSON.parse(localStorageTodos);
+    // Y se lo asigna a la variable parsedItem que ahora sera el valor por defecto de nuestro useState
+    parsedItem = JSON.parse(localStorageItem);
   };
 
+  // Por defecto el valor de todo's será parsedItem, que viene desde localStorage
+  const [item, setItem] = React.useState(parsedItem);  
+  
+  // Creamos una funcion para actualizar el estado de newTodos en localStorage tambien
+  const saveItem = (newItem) => {
+    // Guardamos el newItem actualizamos como string para poder usarlos en localStorage
+    const stringifiedItem = JSON.stringify(newItem);
+    // Le decimos a localStorage que almacene stringified en la key TODOS_V1
+    localStorage.setItem(itemName, stringifiedItem);
+    // Finalmente actualizamos el estado de las todos con setItem
+    setItem(newItem);
+  };
+
+  // Nuestro hook retorna el valor de item y la funcion saveTodos para usarlos en App
+  return [
+    item, 
+    saveItem,
+  ];  
+
+}
+
+function App() {
+  // De lo que nos retorna nuestro hook useLocalStorage
+  // Que son item y saveItem, vamos a guardarlos como todos y saveTodos para usarlos aqui
+  const [todos, saveTodos] = useLocalStorage('TODOS_V1', []);
   // El estado de uso nos permite cambiar el valor de una variable cuando se requiera
   // En este caso searchValue es el nombre que escogimos para el valor inicial que será ''
   // setSearchValue es el nuevo valor que se le dará a searchValue cuando lo necesitemos
   const [searchValue, setSearchValue] = React.useState('');  
-  // Por defecto el valor de todo's será parsedTodos, que viene desde localStorage
-  const [todos, setTodos] = React.useState(parsedTodos);
+
   // Filtramos los todos que tengan el atributo completed true y con length los contamos
   const completedTodos = todos.filter(todo => !!todo.completed).length;
   // Aqui contamos todos los todo's
@@ -64,16 +89,6 @@ function App() {
     })
   }
 
-  // Creamos una funcion para actualizar el estado de newTodos en localStorage tambien
-  const saveTodos = (newTodos) => {
-    // Guardamos los newTodos actualizadmos como string para poder usarlos en localStorage
-    const stringifiedTodos = JSON.stringify(newTodos);
-    // Le decimos a localStorage que almacene stringified en la key TODOS_V1
-    localStorage.setItem('TODOS_V1', stringifiedTodos);
-    // Finalmente actualizamos el estado de las todos con setTodos
-    setTodos(newTodos);
-
-  }
 
   // Creamos una funcion para completar los todo's, recibe el texto del todo como parametro
   const completeTodo = (text) => {
