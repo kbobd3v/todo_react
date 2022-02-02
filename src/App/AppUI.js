@@ -9,6 +9,8 @@ import { TodoSearch } from "../TodoSearch";
 // Aqui recibimos como parametro las props que se enviaron en ./App.index.js
 // Las usaremos para que la reciban tambien todos los componentes que las usan
 function AppUI({
+    loading,
+    error,
     totalTodos,
     completedTodos,
     searchValue,
@@ -24,7 +26,7 @@ function AppUI({
 
       <TodoCounter
       // TodoCounter requiere dos parametros, el total de todo's y el total de todo's completados
-        total={totalTodos}
+        total={totalTodos}//
         completed={completedTodos}
       />
       {/* Al ejecutar TodoSearch se requieren dos parametros correspodientes al estado de uso de searchValue */}
@@ -34,6 +36,9 @@ function AppUI({
       />
       
       <TodoList>
+        {error && <p>Desesperate, hubo un error</p>}
+        {loading && <p>Estamos cargando, no desesperes...</p>}
+        {(!loading && !searchedTodos.length) && <p>Crea tu primer Todo</p>}
       {/* El método map() crea un nuevo array con los resultados de la llamada a la función indicada aplicados a cada uno de sus elementos */}
         {searchedTodos.map(todo => (
           // React nos pide un identificador unico para cada elemento renderizado

@@ -14,54 +14,80 @@ import { AppUI } from "./AppUI";
 // Creamos nuestro primer hook para almacenar datos en localStorage
 // Tomamos el nombre del todo como parametro itemName y el valor inicial del item
 function useLocalStorage(itemName, initialValue) {
-  // Con localStorage podemos crear persistencia de datos
-  // Significa que estos datos estaran disponibles solo hasta que se eliminen del navegador
-  // Le decimos a localStorage que busque informacion del itemName TODOS_V1 
-  const localStorageItem = localStorage.getItem(itemName);
+  const [error, setError] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  // Por defecto el valor de todo's será initialValue, que viene desde localStorage
+  const [item, setItem] = React.useState(initialValue); 
 
-  // Creamos una variable vacia, localStorage solo almacena texto, entonces debes parsear
-  let parsedItem;
+  React.useEffect(() => {
+    setTimeout(() => {
+      try {
+        // Con localStorage podemos crear persistencia de datos
+      // Significa que estos datos estaran disponibles solo hasta que se eliminen del navegador
+      // Le decimos a localStorage que busque informacion del itemName TODOS_V1 
+      const localStorageItem = localStorage.getItem(itemName);
 
-  // Entonces si localStorageItem es false
-  // Es decir si localStorage no encontro el itemName TODOS_V1...
-  if (!localStorageItem) {
-    // Va a llenarlo con el mismo key TODOS_V1
-    // y le decimos que su valor será un arreglo vacio pero como localStorage solo guarda strings
-    // Pasamos el arreglo vacio por stringyfy y listo.
-    localStorage.setItem(itemName, JSON.stringify(initialValue));
-    // Creamos una variable que almacene el valor por defecto
-    parsedItem = initialValue;
-  } else {
-    // De encontrar TODOS_V1 en getItem, entonces parseará sus valores a tipo JSON
-    // Y se lo asigna a la variable parsedItem que ahora sera el valor por defecto de nuestro useState
-    parsedItem = JSON.parse(localStorageItem);
-  };
+      // Creamos una variable vacia, localStorage solo almacena texto, entonces debes parsear
+      let parsedItem;
 
-  // Por defecto el valor de todo's será parsedItem, que viene desde localStorage
-  const [item, setItem] = React.useState(parsedItem);  
+      // Entonces si localStorageItem es false
+      // Es decir si localStorage no encontro el itemName TODOS_V1...
+      if (!localStorageItem) {
+        // Va a llenarlo con el mismo key TODOS_V1
+        // y le decimos que su valor será un arreglo vacio pero como localStorage solo guarda strings
+        // Pasamos el arreglo vacio por stringyfy y listo.
+        localStorage.setItem(itemName, JSON.stringify(initialValue));
+        // Creamos una variable que almacene el valor por defecto
+        parsedItem = initialValue;
+      } else {
+        // De encontrar TODOS_V1 en getItem, entonces parseará sus valores a tipo JSON
+        // Y se lo asigna a la variable parsedItem que ahora sera el valor por defecto de nuestro useState
+        parsedItem = JSON.parse(localStorageItem);
+      }; 
+
+      setItem(parsedItem);
+      setLoading(false);
+      } catch (error) {
+        setError(error);
+      }
+    }, 1000);
+  });
+
+  
   
   // Creamos una funcion para actualizar el estado de newTodos en localStorage tambien
   const saveItem = (newItem) => {
-    // Guardamos el newItem actualizamos como string para poder usarlos en localStorage
+    try {
+      // Guardamos el newItem actualizamos como string para poder usarlos en localStorage
     const stringifiedItem = JSON.stringify(newItem);
     // Le decimos a localStorage que almacene stringified en la key TODOS_V1
     localStorage.setItem(itemName, stringifiedItem);
     // Finalmente actualizamos el estado de las todos con setItem
     setItem(newItem);
+    } catch (error) {
+      setError(error);
+    }
   };
 
-  // Nuestro hook retorna el valor de item y la funcion saveTodos para usarlos en App
-  return [
+  // Nuestro hook retorna el valor de item y la funcion saveItem para usarlos en App
+  return {
     item, 
     saveItem,
-  ];  
+    loading,
+    error,
+  };  
 
 }
 
 function App() {
   // De lo que nos retorna nuestro hook useLocalStorage
   // Que son item y saveItem, vamos a guardarlos como todos y saveTodos para usarlos aqui
-  const [todos, saveTodos] = useLocalStorage('TODOS_V1', []);
+  const {
+    item : todos,
+    saveItem: saveTodos,
+    loading,
+    error
+    } = useLocalStorage('TODOS_V1', []);
   // El estado de uso nos permite cambiar el valor de una variable cuando se requiera
   // En este caso searchValue es el nombre que escogimos para el valor inicial que será ''
   // setSearchValue es el nuevo valor que se le dará a searchValue cuando lo necesitemos
@@ -105,7 +131,19 @@ function App() {
     // Y actualizamos el estado de todos con saveTodos, que ejecuta setTodos con el valor de newTodos
     // Recuerda, cada vez que actualizas un estado react hace un re-render
     saveTodos(newTodos);
-  }
+  };
+
+
+  // useEffect nos permite ejecutar codigo antes de la renderizacion de React
+  // El primer parametro es la funcion que queremos que ejecute
+  // El segundo es un array que define cuando debe ejecutarse especificamente el use Effect
+  // Si enviamos un array vacio este se ejecutará solo la primera vez que se renderice
+  React.useEffect(() => {
+    console.log('use effect')
+    // Si dentro del array agregas el nombre de una variable con estado de uso
+    // Se ejecutará el efecto cada vez que esa variable cambie se actualice
+  }, [totalTodos]);
+
 
   // Creamos una funcion para eliminar los todo's, funciona de la misma manera que completeTodo
   const deleteTodo = (text) => {
@@ -118,6 +156,8 @@ function App() {
   }
   return (
     <AppUI 
+      loading={loading}
+      error={error}
       totalTodos={totalTodos}
       completedTodos={completedTodos}
       searchValue={searchValue}
